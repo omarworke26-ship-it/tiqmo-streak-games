@@ -1,0 +1,2594 @@
+/* =============================================================
+   Tiqmo · Streak Journey Reward — full-screen 12-card game
+   --navy   #061F6F  primary
+   --orange #FC4F00  CTA / accent / reward
+   ============================================================= */
+:root{
+  --navy:#061F6F;
+  --navy-2:#0B2A8C;
+  --navy-3:#1A3AAE;
+  --navy-soft:#EEF1FB;
+  --orange:#FC4F00;
+  --orange-2:#FF7A3D;
+  --orange-soft:#FFF1EA;
+  --bg:#F4F6FB;
+  --ink:#0E1330;
+  --muted:#6A6F86;
+  --line:#E6E9F2;
+  --white:#fff;
+  --shadow-sm: 0 4px 10px -6px rgba(6,31,111,.2);
+  --shadow-md: 0 14px 28px -16px rgba(6,31,111,.35), 0 4px 10px -6px rgba(6,31,111,.18);
+  --shadow-lg: 0 28px 50px -22px rgba(6,31,111,.5), 0 10px 20px -10px rgba(6,31,111,.25);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+
+/* Inline Saudi Riyal icon — inherits text color via currentColor */
+.riyal-icon{
+  display:inline-block;
+  width:.95em;height:.95em;
+  vertical-align:-.14em;
+  fill:currentColor;
+  flex-shrink:0;
+  margin-right:.18em;
+}
+body{
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  background:
+    radial-gradient(1200px 600px at 10% -10%, #E9EEFB 0%, transparent 60%),
+    radial-gradient(900px 500px at 110% 110%, #FFE6D8 0%, transparent 55%),
+    #F4F6FB;
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ---------- Stage / desktop layout ---------- */
+.stage{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items:center;
+  gap:32px;
+  padding:32px;
+}
+.stage__intro{justify-self:end;max-width:300px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--navy);font-size:14px;letter-spacing:.2px}
+.brand__mark{
+  width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#fff,#F4F6FB);
+  display:grid;place-items:center;
+  box-shadow:0 6px 16px -8px rgba(6,31,111,.4), inset 0 0 0 1px rgba(6,31,111,.08);
+}
+.stage__hint{margin-top:14px;color:var(--muted);font-size:13px;line-height:1.55}
+.state-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:18px}
+.state-tags span{
+  font-size:11px;font-weight:600;color:var(--muted);
+  background:#fff;border:1px solid var(--line);
+  padding:6px 10px;border-radius:999px;
+  cursor:pointer;
+  transition:all .25s ease;
+}
+.state-tags span.active{
+  background:var(--navy);color:#fff;border-color:var(--navy);
+  box-shadow:0 6px 14px -6px rgba(6,31,111,.5);
+}
+
+.legend{justify-self:start;max-width:280px;color:var(--ink);font-size:12.5px;line-height:1.6}
+.legend h4{margin:0 0 8px;color:var(--navy);font-size:13px;letter-spacing:.4px;text-transform:uppercase}
+.legend ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.legend li{
+  background:#fff;border:1px solid var(--line);border-radius:14px;
+  padding:10px 12px;color:var(--muted);
+}
+.legend li b{color:var(--navy);font-weight:700}
+.legend__reset{
+  margin-top:14px;width:100%;
+  background:transparent;color:var(--navy);
+  border:1.5px dashed rgba(6,31,111,.35);
+  padding:10px 12px;border-radius:12px;font-weight:600;font-size:12px;
+  cursor:pointer;transition:all .2s ease;
+}
+.legend__reset:hover{background:var(--navy);color:#fff;border-style:solid}
+
+/* ---------- Phone wrap + Option toggle ---------- */
+.phone-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+}
+.option-toggle{
+  display:inline-flex;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:11px;
+  padding:3px;
+  box-shadow:var(--shadow-sm);
+  position:relative;
+  z-index:2;
+}
+.option-btn{
+  background:transparent;border:0;
+  padding:5px 14px;
+  font-family:inherit;
+  font-size:11.5px;font-weight:700;color:var(--muted);
+  border-radius:8px;cursor:pointer;
+  transition:color .25s ease, background .25s ease, box-shadow .25s ease;
+  letter-spacing:.2px;
+}
+.option-btn:hover{color:var(--navy)}
+.option-btn.is-active{
+  background:var(--navy);color:#fff;
+  box-shadow:0 4px 10px -4px rgba(6,31,111,.5);
+}
+
+/* Toggle when placed under the intro panel */
+.option-toggle--intro{
+  margin-top:14px;
+  align-self:flex-start;
+}
+
+/* Reset button when placed under the intro toggle */
+.legend__reset--intro{
+  margin-top:12px;
+  align-self:flex-start;
+  width:auto;
+  padding:8px 18px;
+  font-size:12px;
+}
+
+/* ---------- Phone frame ---------- */
+.phone{
+  width:380px;height:780px;
+  background:#0a0e1f;
+  border-radius:54px;
+  padding:14px;
+  position:relative;
+  box-shadow:
+    0 50px 80px -30px rgba(6,31,111,.55),
+    0 30px 60px -30px rgba(0,0,0,.4),
+    inset 0 0 0 2px #1a1f36;
+}
+.phone__notch{
+  position:absolute;left:50%;top:18px;transform:translateX(-50%);
+  width:120px;height:28px;background:#000;border-radius:0 0 18px 18px;z-index:5;
+}
+.phone__bar{
+  position:absolute;left:50%;bottom:8px;transform:translateX(-50%);
+  width:130px;height:5px;border-radius:5px;background:#2b3050;
+}
+.phone__screen{
+  width:100%;height:100%;
+  background:linear-gradient(180deg, #F8FAFF 0%, #EEF1FB 50%, #F4F6FB 100%);
+  border-radius:42px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+}
+
+/* ---------- Status bar ---------- */
+.status{
+  height:44px;flex:0 0 44px;
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding:0 24px 6px;
+  font-size:13px;font-weight:600;color:var(--ink);
+}
+.status__icons{display:flex;align-items:center;gap:6px;color:var(--ink)}
+
+/* ============================================================
+   GAME — full-screen
+   ============================================================ */
+.game{
+  flex:1;display:flex;flex-direction:column;
+  padding:6px 18px 18px;
+  overflow:hidden;
+  position:relative;
+}
+/* Scroll area only for grid + below — hero stays put */
+.scroll-area{
+  flex:1;min-height:0;
+  overflow-x:hidden;overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.scroll-area::-webkit-scrollbar{display:none}
+
+/* Header */
+.game__header{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-bottom:12px;
+}
+.game__title{
+  font-size:15px;font-weight:800;color:var(--navy);
+  letter-spacing:-.1px;
+}
+.ghost-btn{
+  width:36px;height:36px;border-radius:12px;
+  background:rgba(255,255,255,.7);border:1px solid var(--line);
+  display:grid;place-items:center;color:var(--navy);cursor:pointer;
+  backdrop-filter:blur(10px);
+  transition:all .2s ease;
+}
+.ghost-btn:hover{background:#fff;box-shadow:var(--shadow-sm)}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;
+  background:linear-gradient(135deg, var(--navy) 0%, #0F2A8E 60%, var(--navy-3) 100%);
+  color:#fff;border-radius:24px;
+  padding:16px 18px 14px;
+  margin-bottom:14px;
+  overflow:hidden;
+  box-shadow:0 20px 40px -22px rgba(6,31,111,.6);
+}
+.hero__halo{
+  position:absolute;right:-50px;top:-50px;
+  width:200px;height:200px;
+  background:radial-gradient(circle, rgba(252,79,0,.45) 0%, transparent 60%);
+  pointer-events:none;
+  animation:halo 6s ease-in-out infinite;
+}
+@keyframes halo{
+  0%,100%{transform:scale(1) rotate(0deg)}
+  50%{transform:scale(1.15) rotate(8deg)}
+}
+.hero__row{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  position:relative;z-index:1;
+}
+.hero__chip{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(252,79,0,.18);
+  color:#FFC9AE;
+  border:1px solid rgba(252,79,0,.35);
+  font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  padding:4px 9px;border-radius:999px;
+}
+.hero__chip svg{color:var(--orange)}
+.hero__streak{
+  display:flex;align-items:baseline;gap:5px;line-height:1;
+}
+.hero__streak-num{
+  font-size:24px;font-weight:900;letter-spacing:-.5px;
+  background:linear-gradient(135deg,#FFB58F 0%,#FC4F00 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero__streak-lbl{font-size:10.5px;font-weight:600;opacity:.7;text-transform:uppercase;letter-spacing:.3px}
+
+.hero__title{
+  margin:14px 0 4px;font-size:24px;font-weight:800;letter-spacing:-.6px;line-height:1.1;
+  position:relative;z-index:1;
+}
+.hero__title-main{
+  background:linear-gradient(135deg, #FFE7A1 0%, #FFB347 50%, #FC4F00 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-weight:900;
+  filter:drop-shadow(0 0 8px rgba(252,79,0,.35));
+}
+.hero__title-fade{opacity:.45;font-weight:700}
+.hero__sub{margin:0;font-size:12px;opacity:.7;font-weight:500;position:relative;z-index:1}
+
+.hero__progress{margin-top:14px;position:relative;z-index:1}
+.hero__progress-track{
+  height:6px;border-radius:6px;
+  background:rgba(255,255,255,.13);
+  overflow:hidden;
+}
+.hero__progress-fill{
+  height:100%;
+  background:linear-gradient(90deg, #FF8A4A 0%, var(--orange) 100%);
+  border-radius:6px;
+  transition:width .9s cubic-bezier(.2,.9,.25,1.1);
+  box-shadow:0 0 12px rgba(252,79,0,.6);
+}
+.hero__progress-meta{
+  display:flex;justify-content:space-between;
+  margin-top:7px;font-size:10.5px;font-weight:600;
+}
+.hero__progress-meta b{font-weight:800}
+.hero__progress-earn{color:#FFC9AE}
+.hero__progress-earn b{color:#fff}
+
+.hero__plays{display:none}
+.hero__plays-icon{
+  width:28px;height:28px;border-radius:9px;
+  background:linear-gradient(135deg,var(--orange),#FF8A4A);
+  color:#fff;display:grid;place-items:center;
+  box-shadow:0 6px 14px -6px rgba(252,79,0,.7);
+}
+.hero__plays-text{flex:1;font-size:12px;font-weight:600}
+.hero__plays-text b{font-size:14px;font-weight:800;margin-right:2px}
+.hero__plays-text span{opacity:.65}
+.hero__plays-btn{
+  background:#fff;color:var(--navy);
+  border:0;border-radius:10px;
+  padding:6px 12px;font-size:11px;font-weight:700;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.hero__plays-btn:hover{transform:translateY(-1px);box-shadow:0 6px 12px -6px rgba(0,0,0,.3)}
+.hero__plays-btn:active{transform:translateY(0) scale(.96)}
+
+/* ---------- Monthly streak explainer (under the grid) ---------- */
+.streak-info{
+  margin:4px 2px 12px;
+  padding:0;
+  background:transparent;
+  border:0;
+}
+.streak-info__title{
+  margin:0 0 6px;
+  font-size:15px;
+  font-weight:800;
+  color:#0B1226;
+  letter-spacing:-.2px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.streak-info__info{
+  display:inline-grid;place-items:center;
+  width:18px;height:18px;
+  background:transparent;border:0;padding:0;
+  color:#7A8298;cursor:pointer;
+}
+.streak-info__info:hover{color:#061F6F}
+.streak-info__body{
+  margin:0;
+  font-size:12px;
+  line-height:1.5;
+  color:#5A6280;
+  font-weight:500;
+}
+.streak-info__body sup{font-size:9px;color:#5A6280;font-weight:600;top:-2px}
+.streak-info__amt .riyal-icon{
+  width:.9em;height:.9em;
+  display:inline-block;vertical-align:-1px;
+  margin-right:1px;color:#5A6280;
+}
+.streak-info__terms{color:#FC4F00;font-weight:700;text-decoration:none}
+.streak-info__terms:hover{text-decoration:underline}
+.is-option-3 .streak-info{display:none}
+
+/* ---------- 12-card grid ---------- */
+.grid{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  align-content:start;
+  margin-bottom:10px;
+}
+.card{
+  position:relative;
+  aspect-ratio:1 / 1.18;
+  border-radius:16px;
+  cursor:pointer;
+  user-select:none;
+  perspective:800px;
+  transition:transform .3s cubic-bezier(.2,.9,.25,1.1);
+}
+.card:hover:not(.is-revealed):not(.is-disabled){transform:translateY(-2px)}
+.card.is-disabled{cursor:not-allowed;opacity:.5;filter:grayscale(.6)}
+.card.is-pressed{transform:scale(.94)}
+
+.card__inner{
+  position:absolute;inset:0;border-radius:16px;
+  transform-style:preserve-3d;
+  transition:transform .7s cubic-bezier(.2,.85,.3,1);
+}
+.card.is-flipped .card__inner{transform:rotateY(180deg)}
+
+.card__face{
+  position:absolute;inset:0;border-radius:16px;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+  padding:8px;
+}
+
+/* ============================================================
+   Front (mystery) — clean, simple, fintech-friendly
+   ============================================================ */
+.card__front{
+  background:linear-gradient(160deg, #0A2275 0%, #061F6F 55%, #04154D 100%);
+  color:#fff;
+  border:1px solid rgba(255,255,255,.07);
+  box-shadow:var(--shadow-md), inset 0 1px 0 rgba(255,255,255,.1);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;
+}
+
+/* Small "Lv N" label — top left, plain text */
+.card__lvl{
+  position:absolute;top:10px;left:11px;
+  font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+}
+
+/* Centered gift-box illustration — single subtle bob */
+.card__icon{
+  display:grid;place-items:center;
+  filter:drop-shadow(0 6px 10px rgba(0,0,0,.3));
+  animation:iconBob 4.5s ease-in-out infinite;
+  transition:transform .3s cubic-bezier(.2,.9,.25,1.4);
+}
+.card__icon-img{
+  width:54px;height:54px;
+  display:block;
+  user-select:none;pointer-events:none;
+  -webkit-user-drag:none;
+}
+@keyframes iconBob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-3px)}
+}
+
+/* "Tap to win" hint — small subtle text */
+.card__hint{
+  font-size:9.5px;font-weight:600;letter-spacing:.4px;
+  color:rgba(255,200,150,.85);
+  margin-top:2px;
+}
+
+/* Prize range chip — shows what the card can win */
+.card__range{
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:800;letter-spacing:.1px;
+  color:#FFE7A1;
+  background:linear-gradient(135deg, rgba(252,79,0,.28), rgba(252,79,0,.16));
+  border:1px solid rgba(252,79,0,.45);
+  padding:3px 7px 3px 6px;
+  border-radius:999px;
+  margin-top:4px;
+  text-shadow:0 1px 1px rgba(0,0,0,.35);
+  font-variant-numeric:tabular-nums;
+}
+.card__range .riyal-icon{
+  width:.8em;height:.8em;
+  margin-right:2px;
+}
+
+/* Hover — gentle lift + brighter border (only on playable cards) */
+.card.is-current:hover .card__front{
+  border-color:rgba(252,79,0,.35);
+  box-shadow:var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.15);
+}
+.card.is-current:hover .card__icon{
+  transform:translateY(-2px) scale(1.05);
+}
+
+/* Pressed — small tactile scale */
+.card.is-pressed .card__icon{transform:scale(.92)}
+.card.is-pressed .card__front{border-color:rgba(252,79,0,.5)}
+
+/* ----- Current card: highlighted, the one to play next ----- */
+.card.is-current{cursor:pointer}
+.card.is-current .card__front{
+  border-color:rgba(252,79,0,.5);
+  box-shadow:
+    var(--shadow-md),
+    0 0 0 2px rgba(252,79,0,.25),
+    0 14px 28px -10px rgba(252,79,0,.45),
+    inset 0 1px 0 rgba(255,255,255,.12);
+}
+
+/* ----- Locked card: same navy as before, with a small lock badge ----- */
+.card.is-locked{
+  cursor:not-allowed;
+  pointer-events:none;
+}
+.card.is-locked .card__front{
+  /* Background stays the original navy — no filter, no grayscale */
+  opacity:.78;
+}
+.card.is-locked .card__icon{
+  opacity:.55;
+}
+/* Tiny lock badge in the top-right corner */
+.card.is-locked .card__face::after{
+  content:"";
+  position:absolute;
+  top:7px;right:7px;
+  width:20px;height:20px;
+  border-radius:7px;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.18);
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='.85' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'><rect x='5' y='11' width='14' height='10' rx='2'/><path d='M8 11V8a4 4 0 0 1 8 0v3'/></svg>");
+  background-size:12px 12px;
+  background-repeat:no-repeat;
+  background-position:center;
+  z-index:5;
+  pointer-events:none;
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+
+/* ============================================================
+   OPTION 2 — recreated card design (lock + LV pill + progress)
+   ============================================================ */
+.card__front--2{
+  background:#FFFFFF;
+  color:#334155;
+  border:1px solid rgba(51,65,85,.08);
+  box-shadow:var(--shadow-md);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:space-between;
+  padding:6px 5px 5px;
+  gap:0;
+}
+
+/* Subtle diagonal pattern (replaces the embedded JPEG texture) */
+.opt2__pattern{
+  position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  background-image:repeating-linear-gradient(
+    -42deg,
+    rgba(80,90,120,.045) 0,
+    rgba(80,90,120,.045) 1px,
+    transparent 1px,
+    transparent 7px
+  );
+  mask-image:radial-gradient(ellipse at center, #000 30%, rgba(0,0,0,.7) 100%);
+  -webkit-mask-image:radial-gradient(ellipse at center, #000 30%, rgba(0,0,0,.7) 100%);
+}
+
+/* Lock icon — centered, hero element of the card */
+.opt2__lock{
+  width:30px;height:38px;
+  display:grid;place-items:center;
+  z-index:2;position:relative;
+  filter:drop-shadow(0 4px 6px rgba(252,79,0,.18));
+  margin-top:6px;
+}
+.opt2__lock svg{
+  width:100%;height:100%;display:block;
+}
+
+/* Body: title + range */
+.opt2__body{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  text-align:center;
+  z-index:2;position:relative;
+}
+.opt2__title{
+  font-size:10.5px;font-weight:500;
+  color:#334155;letter-spacing:0;
+  line-height:1.15;
+}
+.opt2__range{
+  font-size:11px;font-weight:600;
+  color:#334155;
+  display:inline-flex;align-items:center;gap:3px;
+  font-variant-numeric:tabular-nums;
+}
+.opt2__range .riyal-icon{
+  width:.85em;height:.85em;
+  margin-right:0;
+}
+
+/* Bottom: progress + status */
+.opt2__pill--bottom{
+  width:calc(100% - 4px);
+  background:rgba(242,241,241,.35);
+  border:1px solid #E4E4E4;
+  border-radius:9px;
+  padding:5px 7px 5px;
+  z-index:2;position:relative;
+}
+.opt2__progress{
+  height:3px;
+  background:#D4D4D4;
+  border-radius:2px;
+  overflow:hidden;
+}
+.opt2__progress-fill{
+  height:100%;
+  background:#FC4F00;
+  border-radius:2px;
+}
+
+/* Hover/pressed */
+.card:hover:not(.is-revealed):not(.is-disabled) .card__front--2{
+  box-shadow:var(--shadow-lg);
+  border-color:rgba(252,79,0,.35);
+}
+.card:hover:not(.is-revealed):not(.is-disabled) .opt2__lock{
+  transform:scale(1.06);
+  filter:drop-shadow(0 6px 10px rgba(252,79,0,.35));
+  transition:transform .25s ease, filter .25s ease;
+}
+.card.is-pressed .card__front--2{
+  box-shadow:var(--shadow-sm);
+}
+.card.is-pressed .opt2__lock{transform:scale(.94)}
+
+/* ============================================================
+   Back face (revealed) — uses the full SVG design as background
+   with dynamic LV and amount overlays
+   ============================================================ */
+.card__back{
+  background:transparent;
+  border:1.5px solid #FC4F00;
+  transform:rotateY(180deg);
+  box-shadow:0 6px 14px -4px rgba(252,79,0,.4);
+  padding:0;
+  overflow:hidden;
+  position:relative;
+  display:block;
+}
+.card__back-icon{display:none}
+
+.back-bg{
+  width:100%;height:100%;
+  display:block;
+  object-fit:fill;
+  border-radius:16px;
+  user-select:none;-webkit-user-drag:none;
+  pointer-events:none;
+}
+
+/* Dynamic LV text overlay — sits over the SVG's orange pill */
+.card__back .back-overlay-lvl{
+  position:absolute;
+  top:5%;left:6%;
+  width:26%;height:11%;
+  display:grid;place-items:center;
+  z-index:2;
+  pointer-events:none;
+}
+.card__back .back-overlay-lvl .card__lvl{
+  color:#fff;
+  font-size:8px;font-weight:700;letter-spacing:.6px;
+  background:transparent;border:0;padding:0;
+  position:static;
+  top:auto;left:auto;
+  text-transform:uppercase;
+  line-height:1;
+  opacity:1;
+}
+
+/* Dynamic amount text overlay — sits over the SVG's white pill area */
+.card__back .back-overlay-amount{
+  position:absolute;
+  top:73%;left:30%;
+  width:40%;height:14%;
+  display:grid;place-items:center;
+  z-index:2;
+  pointer-events:none;
+}
+.card__back .back-overlay-amount .card__amount{
+  color:var(--navy);
+  font-size:18px;font-weight:900;letter-spacing:-.4px;
+  font-variant-numeric:tabular-nums;
+  line-height:1;
+  text-align:center;
+}
+
+/* Lv pill — orange filled, top-left */
+.card__back .card__lvl{
+  position:absolute;top:6px;left:6px;
+  background:linear-gradient(135deg, #FF7A3D 0%, var(--orange) 100%);
+  color:#fff;
+  padding:3px 8px 2px;
+  border-radius:8px;
+  font-size:9px;font-weight:800;letter-spacing:.4px;
+  box-shadow:0 3px 6px -2px rgba(252,79,0,.55);
+  opacity:1;text-transform:uppercase;
+  z-index:3;
+}
+
+/* Check circle — bigger, top-right */
+.card__check{
+  position:absolute;top:6px;right:6px;
+  width:20px;height:20px;border-radius:50%;
+  background:linear-gradient(135deg, #FF7A3D 0%, var(--orange) 100%);
+  color:#fff;
+  display:grid;place-items:center;
+  box-shadow:
+    0 3px 6px -2px rgba(252,79,0,.5),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  z-index:3;
+}
+
+/* 3D Gold coin */
+.back-coin{
+  position:relative;
+  width:44px;height:44px;
+  margin:5px 0 2px;
+  display:grid;place-items:center;
+  filter:drop-shadow(0 4px 6px rgba(168,90,0,.4));
+  z-index:2;
+}
+.back-coin-svg,
+.back-coin-img{
+  width:100%;height:100%;display:block;
+  user-select:none;-webkit-user-drag:none;pointer-events:none;
+}
+.back-spark{
+  position:absolute;
+  font-size:8px;color:#FFC04A;
+  text-shadow:0 0 4px #FFE7A1;
+  opacity:.85;
+}
+.back-spark--1{top:-2px;left:-6px;font-size:7px}
+.back-spark--2{top:8px;right:-7px;font-size:8px;color:#FFB347}
+.back-spark--3{bottom:6px;left:-8px;font-size:6px}
+.back-spark--4{bottom:-2px;right:-4px;font-size:7px;color:#FFB347}
+
+/* Riyal row with accent lines */
+.back-currency-row{
+  display:flex;align-items:center;justify-content:center;
+  gap:2px;
+  margin-top:1px;
+  position:relative;
+}
+.back-riyal{
+  width:14px;height:16px;
+  fill:var(--orange);
+  filter:drop-shadow(0 1px 1px rgba(252,79,0,.25));
+}
+.back-spark-line{
+  width:5px;height:1.5px;
+  background:var(--orange);
+  border-radius:1px;
+  display:block;
+  opacity:.85;
+}
+.back-spark-line--l1{transform:rotate(-30deg) translateY(-3px)}
+.back-spark-line--l2{transform:rotate(30deg) translateY(3px);width:4px}
+.back-spark-line--r1{transform:rotate(30deg) translateY(-3px)}
+.back-spark-line--r2{transform:rotate(-30deg) translateY(3px);width:4px}
+
+/* Amount pill — white rounded with dashes */
+.back-amount-pill{
+  margin-top:auto;
+  width:calc(100% - 6px);
+  background:#FFFFFF;
+  border:1px solid rgba(252,79,0,.15);
+  border-radius:9px;
+  padding:4px 6px;
+  display:flex;align-items:center;justify-content:center;
+  gap:6px;
+  box-shadow:0 2px 5px -2px rgba(168,90,0,.18);
+}
+.back-dash{
+  color:var(--orange);
+  font-weight:900;font-size:11px;
+  line-height:1;opacity:.85;
+}
+.card__amount{
+  font-size:15px;font-weight:900;color:var(--navy);
+  letter-spacing:-.4px;line-height:1;
+  text-align:center;
+  font-variant-numeric:tabular-nums;
+}
+.card__currency{display:none}
+
+/* ============================================================
+   OPTIONS 3 & 4 — Games, light premium style (tiqmo colors)
+   Light screen with soft blue/navy glows, white glass cards,
+   day-card style tiles. Accent #059FF4, jackpots in tiqmo orange.
+   ============================================================ */
+.dice-game{display:none}
+/* Options 3 and 4 share this theme: .is-space hides the card-game UI */
+.game.is-space .grid{display:none}
+.game.is-space .scroll-area{display:none}
+.game.is-space .hero{display:none}
+.game.is-space .game__footer{display:none}
+.game.is-space .game__header{display:none}
+.game.is-option-3 .dice-game{
+  display:flex;
+  flex:1;
+  padding:0;
+  margin:0 -18px -18px;
+}
+
+/* Screen: tiqmo light background with a soft blue glow up top */
+.phone__screen.is-dq{
+  background:
+    radial-gradient(90% 34% at 50% 0%, rgba(5,159,244,.16) 0%, rgba(5,159,244,0) 100%),
+    radial-gradient(70% 40% at 50% 60%, rgba(6,31,111,.05) 0%, rgba(6,31,111,0) 100%),
+    #F4F6FB;
+}
+
+/* Header: Games badge + close */
+.dq-header{display:none}
+.game.is-space .dq-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;
+  padding:6px 0 12px;
+  position:relative;z-index:2;
+}
+.dq-badge{
+  display:flex;align-items:center;
+  gap:10px;
+  padding:5px 16px 5px 5px;
+  border-radius:14px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 8px 20px -14px rgba(6,31,111,.35);
+}
+.dq-badge__brand{
+  display:flex;align-items:center;gap:2px;
+  height:42px;
+  padding:0 4px 0 7px;
+  border-radius:10px;
+  background:linear-gradient(160deg, #059FF4 0%, #1A3AAE 100%);
+  box-shadow:0 6px 14px -6px rgba(5,159,244,.6), inset 0 1px 0 rgba(255,255,255,.25);
+  color:#fff;
+}
+.dq-badge__mark{width:22px;height:22px;display:block}
+.dq-badge__label{
+  writing-mode:vertical-rl;
+  transform:rotate(180deg);
+  font-size:8px;font-weight:800;letter-spacing:1.3px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.9);
+}
+.dq-badge__text{
+  display:block;
+  font-size:12px;line-height:15px;font-weight:500;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.dq-badge__text b{color:#059FF4;font-weight:800}
+.dq-badge__text .riyal-icon{width:.85em;height:.9em;margin:0 0 0 1px;vertical-align:-.1em}
+.dq-close{
+  width:36px;height:36px;flex:0 0 36px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 6px 14px -10px rgba(6,31,111,.4);
+  color:var(--navy);
+  cursor:pointer;
+}
+
+/* Attempts card: white glass with a blue glow from the corner */
+.dq-attempts{display:none}
+.game.is-space .dq-attempts{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:
+    radial-gradient(120% 160% at 0% 0%, rgba(5,159,244,.14) 0%, rgba(5,159,244,0) 55%),
+    #fff;
+  border:1px solid var(--line);
+  box-shadow:0 12px 26px -18px rgba(6,31,111,.4);
+  position:relative;z-index:2;
+}
+.dq-attempts__icon{
+  width:48px;height:48px;flex:0 0 48px;
+  display:grid;place-items:center;
+  border-radius:12px;
+  background:rgba(5,159,244,.1);
+  border:1px solid rgba(5,159,244,.28);
+}
+.dq-attempts__icon svg{
+  width:28px;height:28px;display:block;
+  filter:drop-shadow(0 3px 4px rgba(6,31,111,.25));
+}
+.dq-attempts__icon .dq-ico-ball{display:none}
+.game.is-option-4 .dq-attempts__icon .dq-ico-dice{display:none}
+.game.is-option-4 .dq-attempts__icon .dq-ico-ball{display:block}
+.dq-attempts__body{
+  display:flex;flex-direction:column;align-items:flex-start;
+  gap:6px;
+  min-width:0;
+}
+.dq-attempts__title{
+  font-size:15px;font-weight:700;letter-spacing:-.1px;
+  color:var(--ink);
+}
+.dq-attempts__title b{color:#059FF4;font-weight:800}
+.dq-attempts__expiry{
+  display:inline-block;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#F1F3F9;
+  font-size:11px;font-weight:500;
+  color:var(--muted);
+}
+
+/* ---------- Tiles: day-card style (shared look for dice tiles + plinko boxes) ---------- */
+.tile,
+.pk-slot{
+  border:1px solid var(--line);
+  border-radius:12px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  overflow:hidden;
+  user-select:none;
+  background:linear-gradient(180deg, #FFFFFF 0%, #F8F9FD 100%);
+  box-shadow:0 8px 16px -12px rgba(6,31,111,.3);
+  transition:
+    transform .22s cubic-bezier(.2,.9,.25,1.4),
+    box-shadow .22s ease,
+    background .22s ease,
+    border-color .22s ease;
+}
+.tile__icon,
+.pk-slot__icon{
+  line-height:1;
+  filter:drop-shadow(0 2px 3px rgba(6,31,111,.18));
+}
+.tile__label,
+.pk-slot__label{
+  font-weight:700;letter-spacing:.1px;
+  color:var(--ink);
+  white-space:nowrap;
+}
+.tile__label .riyal-icon,
+.pk-slot__label .riyal-icon{width:.9em;height:.95em;margin:0 0 0 2px;vertical-align:-.12em}
+
+/* Jackpots get a warm tiqmo-orange glow, like the gold card in the reference */
+.tile.is-jackpot,
+.pk-slot--jackpot{
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(252,79,0,.16) 0%, rgba(252,79,0,0) 62%),
+    #FFFFFF;
+  border-color:rgba(252,79,0,.38);
+}
+
+/* Landing state: bright blue card with a check badge, like the active day */
+.tile.is-won,
+.pk-slot.is-won{
+  background:linear-gradient(180deg, #059FF4 0%, #1A3AAE 100%);
+  border-color:#059FF4;
+  box-shadow:
+    0 0 0 3px rgba(5,159,244,.18),
+    0 12px 24px -8px rgba(5,159,244,.6),
+    inset 0 1px 0 rgba(255,255,255,.35);
+  z-index:3;
+}
+.tile.is-won .tile__label,
+.pk-slot.is-won .pk-slot__label{color:#fff}
+.tile.is-won::after,
+.pk-slot.is-won::after{
+  content:"";
+  position:absolute;top:4px;right:4px;
+  width:13px;height:13px;
+  border-radius:50%;
+  background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6.2l2 2 4-4.4' fill='none' stroke='%23059FF4' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 9px no-repeat;
+  box-shadow:0 2px 6px rgba(6,31,111,.3);
+}
+
+/* ---------- Option 3: dice board ---------- */
+/* Full-screen 5x5 board; tiles around perimeter, center spans 3x3.
+   Padding stays symmetric so the board's center is the dice's resting point. */
+.dice-board{
+  flex:1;
+  display:grid;
+  grid-template-columns:repeat(5, 1fr);
+  grid-template-rows:repeat(5, 1fr);
+  gap:7px;
+  background:transparent;
+  padding:12px;
+  position:relative;
+  overflow:visible; /* the thrown die can rise above the top row */
+}
+.tile{
+  position:relative;
+  gap:4px;
+  padding:3px;
+}
+/* Alternate two light shades around the perimeter for rhythm.
+   :where() keeps this at single-class weight so jackpot / active / won still win */
+.tile:where(:nth-child(even):not(.is-jackpot)){
+  background:linear-gradient(180deg, #F3F5FA 0%, #ECEFF6 100%);
+}
+.tile__icon{font-size:20px}
+.tile__label{
+  font-size:8px;
+  text-overflow:ellipsis;overflow:hidden;
+  max-width:100%;
+}
+
+/* Selector passes over a tile */
+.tile.is-active{
+  background:linear-gradient(180deg, rgba(5,159,244,.16) 0%, rgba(5,159,244,.06) 100%);
+  border-color:rgba(5,159,244,.7);
+  transform:scale(1.06) translateY(-1px);
+  box-shadow:0 0 0 3px rgba(5,159,244,.14), 0 10px 18px -10px rgba(5,159,244,.5);
+  z-index:2;
+}
+
+.tile.is-won{
+  transform:scale(1.12);
+  animation:tileWonPulse 1.4s ease-in-out infinite;
+}
+@keyframes tileWonPulse{
+  0%,100%{transform:scale(1.12)}
+  50%{transform:scale(1.16)}
+}
+
+/* Center: white glass stage with the step counter, CTA at the bottom */
+.dice-center{
+  grid-column:2 / span 3;
+  grid-row:2 / span 3;
+  background:
+    radial-gradient(70% 55% at 50% 50%, rgba(5,159,244,.12) 0%, rgba(5,159,244,0) 100%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7F9FD 100%);
+  border:1px solid var(--line);
+  border-radius:18px;
+  box-shadow:0 14px 30px -22px rgba(6,31,111,.45);
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  gap:12px;
+  padding:0 12px 14px;
+  cursor:pointer;
+  font-family:inherit;
+  position:relative;
+  overflow:hidden;
+}
+.dice-center:disabled{cursor:not-allowed}
+.dice-center__halo{
+  position:absolute;left:50%;top:50%;
+  width:170px;height:170px;margin:-85px 0 0 -85px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(5,159,244,.16) 0%, rgba(5,159,244,.05) 40%, transparent 68%);
+  pointer-events:none;
+  transition:opacity .35s ease;
+}
+.dice-game.is-rolling .dice-center__halo{opacity:.35}
+
+@keyframes dqGlow{
+  0%,100%{opacity:.7}
+  50%{opacity:1}
+}
+
+.dice-center__hint{
+  position:relative;z-index:2;
+  font-size:12px;font-weight:500;
+  color:var(--muted);
+  transition:opacity .3s ease;
+}
+.dice-center__hint b{color:var(--ink);font-weight:700}
+.dice-game.is-rolling .dice-center__hint{opacity:.45}
+
+/* Gradient pill button, like the reference's Claim */
+.dq-cta{
+  position:relative;z-index:2;
+  display:block;
+  width:100%;max-width:210px;
+  height:48px;line-height:48px;
+  border-radius:14px;
+  background:linear-gradient(90deg, #1A3AAE 0%, #059FF4 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.25),
+    0 12px 24px -12px rgba(5,159,244,.7);
+  color:#fff;
+  font-size:15px;font-weight:600;letter-spacing:.1px;
+  transition:transform .15s ease, filter .2s ease, box-shadow .15s ease;
+}
+.dice-center:hover:not(:disabled) .dq-cta{filter:brightness(1.08)}
+.dice-center:active:not(:disabled) .dq-cta{transform:scale(.98)}
+.dice-game.is-rolling .dq-cta{filter:saturate(.6) brightness(.95);opacity:.75}
+.dice-game:not(.is-rolling) .dice-center:disabled .dq-cta{
+  background:#E6E9F2;
+  box-shadow:none;
+  color:var(--muted);
+}
+
+/* Start tile: where the token begins */
+.tile.is-start{
+  background:
+    linear-gradient(180deg, rgba(5,159,244,.14) 0%, rgba(5,159,244,.04) 100%),
+    #fff;
+  border-color:rgba(5,159,244,.4);
+}
+.tile.is-start .tile__label{color:#059FF4}
+
+/* Center counter: the number rolled, counting down as the dice walks */
+.dice-center__display{
+  position:absolute;left:0;right:0;top:0;bottom:92px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;
+  padding:0 10px;
+  text-align:center;
+  pointer-events:none;
+}
+.dice-center__steps{
+  font-size:58px;font-weight:800;line-height:1;
+  letter-spacing:-2px;
+  color:var(--navy);
+  font-variant-numeric:tabular-nums;
+}
+.dice-center__icon{
+  width:56px;height:56px;display:block;
+  filter:drop-shadow(0 8px 12px rgba(6,31,111,.22));
+}
+.dice-center__caption{
+  font-size:12px;font-weight:500;line-height:1.4;
+  color:var(--muted);
+}
+.dice-center__caption b{color:var(--ink);font-weight:700}
+.dice-center__caption .riyal-icon{width:.9em;height:.95em;margin:0 0 0 2px;vertical-align:-.12em}
+
+/* ---- Dice: the player piece, sits on its tile and walks the board ---- */
+.dice-hopper{
+  position:absolute;
+  /* Sits on its tile's center (JS sets the exact point) */
+  left:50%;top:50%;
+  width:46px;height:46px;
+  scale:.74; /* fits inside a tile */
+  margin-left:-23px;margin-top:-23px;
+  z-index:8;
+  pointer-events:none;
+  perspective:600px;
+  transition:left 0ms, top 0ms;
+  filter:drop-shadow(0 10px 12px rgba(6,31,111,.3));
+}
+/* Gentle hover on its tile while waiting for a roll */
+.dice-game:not(.is-rolling):not(.is-revealed) .dice-hopper{
+  animation:dqBob 2.6s ease-in-out infinite;
+}
+@keyframes dqBob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+.dice-hopper__inner{
+  position:relative;
+  width:100%;height:100%;
+  transform-style:preserve-3d;
+  transform:rotateX(-18deg) rotateY(28deg);
+  transition:transform .35s cubic-bezier(.18,.65,.18,1);
+}
+.dice-hopper .dice2__face{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 25%, #FFFFFF 0%, #F8F9FC 65%, #E2E6F2 100%);
+  border:1.5px solid rgba(6,31,111,.18);
+  border-radius:9px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.6),
+    inset 0 -2px 3px rgba(6,31,111,.06);
+}
+.dice-hopper .dice2__face--front  { transform: translateZ(23px); }
+.dice-hopper .dice2__face--back   { transform: rotateY(180deg) translateZ(23px); }
+.dice-hopper .dice2__face--right  { transform: rotateY(90deg)  translateZ(23px); }
+.dice-hopper .dice2__face--left   { transform: rotateY(-90deg) translateZ(23px); }
+.dice-hopper .dice2__face--top    { transform: rotateX(90deg)  translateZ(23px); }
+.dice-hopper .dice2__face--bottom { transform: rotateX(-90deg) translateZ(23px); }
+
+/* Prize toast: white glass */
+.game.is-space .empty-toast__panel{
+  background:rgba(255,255,255,.96);
+  border:1px solid var(--line);
+  box-shadow:0 22px 40px -16px rgba(6,31,111,.45);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+}
+.game.is-space .empty-toast__title{color:var(--ink)}
+.game.is-space .empty-toast__sub{color:var(--muted)}
+
+/* ---------- Option 4: Plinko ---------- */
+.plinko{display:none}
+.game.is-option-4 .plinko{
+  display:flex;flex-direction:column;
+  flex:1;min-height:0;
+  margin:0 -18px;
+}
+.plinko__board{
+  flex:1;min-height:0;
+  position:relative;
+  overflow:hidden;
+}
+/* White glass stage behind the ship, pegs and boxes, same as the dice stage in Option 3 */
+.plinko__board::before{
+  content:"";
+  position:absolute;inset:0 12px;
+  border-radius:20px;
+  background:
+    radial-gradient(65% 45% at 50% 58%, rgba(5,159,244,.10) 0%, rgba(5,159,244,0) 100%),
+    linear-gradient(180deg, #FFFFFF 0%, #F7F9FD 100%);
+  border:1px solid var(--line);
+  box-shadow:0 14px 30px -22px rgba(6,31,111,.45);
+  pointer-events:none;
+}
+
+/* Ship: blue glass dome on a silver saucer, rim lights, soft glow under it */
+.pk-dropper{
+  position:absolute;left:50%;top:0; /* JS sets top */
+  width:96px;height:58px;margin-left:-48px;
+  z-index:4;
+  pointer-events:none;
+}
+.pk-dropper__dome{
+  position:absolute;left:50%;top:0;
+  width:46px;height:34px;margin-left:-23px;
+  border-radius:23px 23px 8px 8px;
+  background:radial-gradient(circle at 36% 30%, rgba(255,255,255,.95) 0 10%, #9FDCFF 26%, #2C9BE6 62%, #155FA6 100%);
+  box-shadow:
+    inset 0 -4px 6px rgba(10,30,80,.3),
+    0 0 18px rgba(5,159,244,.3);
+}
+.pk-dropper__dome::before{
+  content:"";position:absolute;
+  left:50%;top:-6px;
+  width:8px;height:8px;margin-left:-4px;
+  border-radius:50%;
+  background:radial-gradient(circle at 40% 35%, #FFFFFF 0%, #FFB089 45%, #FC4F00 100%);
+  box-shadow:0 0 10px rgba(252,79,0,.8);
+  animation:pkBeacon 1.4s ease-in-out infinite;
+}
+@keyframes pkBeacon{
+  0%,100%{opacity:1}
+  50%{opacity:.45}
+}
+.pk-dropper__saucer{
+  position:absolute;left:0;right:0;top:24px;
+  height:24px;
+  border-radius:50%;
+  background:linear-gradient(180deg, #FFFFFF 0%, #C9D1E6 42%, #6B7697 100%);
+  box-shadow:
+    inset 0 -4px 0 rgba(26,34,70,.4),
+    inset 0 2px 0 rgba(255,255,255,.95),
+    0 12px 18px -8px rgba(6,31,111,.4);
+}
+.pk-dropper__saucer::after{
+  content:"";position:absolute;
+  left:14px;right:14px;top:11px;height:5px;
+  background:radial-gradient(circle, #CFF0FF 0 1.6px, transparent 2.4px) 0 50% / 12px 5px repeat-x;
+  filter:drop-shadow(0 0 3px rgba(5,159,244,.9));
+}
+.pk-dropper::after{
+  content:"";position:absolute;
+  left:50%;top:42px;
+  width:34px;height:24px;margin-left:-17px;
+  border-radius:50%;
+  background:radial-gradient(ellipse at 50% 0%, rgba(120,200,255,.8) 0%, rgba(5,159,244,.3) 40%, transparent 72%);
+  filter:blur(2px);
+  animation:dqGlow 1.6s ease-in-out infinite;
+}
+
+/* Pegs: small navy-steel studs that flash blue with a ripple on contact */
+.pk-peg{
+  position:absolute;
+  width:14px;height:14px;margin:-7px 0 0 -7px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #FFFFFF 0%, #C9D3EA 28%, #5D6B98 72%, #2B3765 100%);
+  box-shadow:0 3px 5px rgba(6,31,111,.3);
+  z-index:2;
+}
+.pk-peg::after{
+  content:"";position:absolute;inset:-3px;
+  border-radius:50%;
+  border:2px solid rgba(5,159,244,0);
+  pointer-events:none;
+}
+.pk-peg.is-hit{animation:pkPegHit .5s ease-out}
+.pk-peg.is-hit::after{animation:pkRipple .55s ease-out}
+@keyframes pkPegHit{
+  0%{transform:scale(1.25);box-shadow:0 0 14px 4px rgba(5,159,244,.7)}
+  100%{transform:scale(1);box-shadow:0 3px 5px rgba(6,31,111,.3)}
+}
+@keyframes pkRipple{
+  0%{transform:scale(1);border-color:rgba(5,159,244,.9)}
+  100%{transform:scale(2.6);border-color:rgba(5,159,244,0)}
+}
+
+/* Prize boxes */
+.pk-slot{
+  position:absolute;
+  gap:5px;
+  z-index:1;
+}
+.pk-slot:where(.pk-slot--alt:not(.pk-slot--jackpot)){
+  background:linear-gradient(180deg, #F3F5FA 0%, #ECEFF6 100%);
+}
+.pk-slot__icon{font-size:18px}
+.pk-slot__label{font-size:9px}
+.pk-slot.is-won{transform:scale(1.08)}
+
+/* The ball: glossy #059FF4 sphere with a soft glow */
+.pk-ball{
+  position:absolute;left:0;top:0;
+  width:22px;height:22px;
+  z-index:5;
+  pointer-events:none;
+  will-change:transform;
+  transition:opacity .3s ease;
+}
+.pk-ball.is-hidden{opacity:0}
+.pk-ball__sphere{
+  display:block;
+  width:100%;height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 34% 30%, #FFFFFF 0%, #A6E1FF 16%, #22AEFA 48%, #0784CC 78%, #055E96 100%);
+  box-shadow:
+    0 0 14px rgba(5,159,244,.5),
+    0 5px 8px rgba(6,31,111,.3);
+}
+
+/* Ship and ball hover together while waiting for a drop */
+.plinko.is-ready .pk-dropper,
+.plinko.is-ready .pk-ball__sphere{
+  animation:dqBob 2.6s ease-in-out infinite;
+}
+
+/* Full-width gradient button, like the reference's Claim */
+.pk-cta{
+  appearance:none;border:0;
+  font-family:inherit;
+  cursor:pointer;
+  flex:0 0 auto;
+  width:calc(100% - 36px);max-width:none;
+  height:52px;line-height:52px;
+  margin:12px auto 0;
+}
+.pk-cta:hover:not(:disabled){filter:brightness(1.08)}
+.pk-cta:active:not(:disabled){transform:scale(.98)}
+.plinko.is-dropping .pk-cta{filter:saturate(.6) brightness(.95);opacity:.75;cursor:default}
+.plinko:not(.is-dropping) .pk-cta:disabled{
+  background:#E6E9F2;
+  box-shadow:none;
+  color:var(--muted);
+  cursor:not-allowed;
+}
+
+/* ---------- Option 4 game touches ---------- */
+
+/* Live wins ticker at the top of the stage */
+.pk-ticker{
+  position:absolute;left:50%;top:12px;
+  transform:translateX(-50%);
+  display:flex;align-items:center;gap:7px;
+  height:28px;
+  padding:0 12px 0 10px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid var(--line);
+  box-shadow:0 8px 18px -12px rgba(6,31,111,.35);
+  font-size:11px;font-weight:500;
+  color:var(--muted);
+  white-space:nowrap;
+  z-index:3;
+}
+.pk-ticker__dot{
+  width:7px;height:7px;flex:0 0 7px;
+  border-radius:50%;
+  background:#12B76A;
+  animation:pkLive 1.8s ease-out infinite;
+}
+@keyframes pkLive{
+  0%{box-shadow:0 0 0 0 rgba(18,183,106,.45)}
+  100%{box-shadow:0 0 0 7px rgba(18,183,106,0)}
+}
+.pk-ticker__text{display:inline-block}
+.pk-ticker__name{color:var(--ink);font-weight:700}
+.pk-ticker__text b{color:#059FF4;font-weight:800}
+.pk-ticker__text .riyal-icon{width:.85em;height:.9em;margin:0 0 0 1px;vertical-align:-.1em}
+
+/* Floating riyal coins, same coin as the Mega Cashback screen */
+.pk-coin{
+  position:absolute;
+  background:url('./assets/coin-mask.svg') center / contain no-repeat;
+  filter:drop-shadow(0 6px 8px rgba(6,31,111,.22));
+  pointer-events:none;
+  z-index:1;
+  animation:pkFloat 4.2s ease-in-out infinite;
+}
+.pk-coin--1{width:30px;height:30px;left:40px;top:92px;animation-delay:-.4s}
+.pk-coin--2{width:22px;height:22px;right:44px;top:66px;animation-delay:-1.6s}
+.pk-coin--3{width:18px;height:18px;right:34px;top:196px;animation-delay:-2.4s;opacity:.85}
+.pk-coin--4{width:20px;height:20px;left:32px;top:214px;animation-delay:-3.1s;opacity:.85}
+@keyframes pkFloat{
+  0%,100%{transform:translateY(0) rotate(-8deg)}
+  50%{transform:translateY(-8px) rotate(8deg)}
+}
+
+/* Twinkling stars in tiqmo blue and orange */
+.pk-star{
+  position:absolute;
+  line-height:1;
+  pointer-events:none;
+  z-index:1;
+  animation:pkTwinkle 2.4s ease-in-out infinite;
+}
+.pk-star--1{left:84px;top:60px;font-size:12px;color:#059FF4}
+.pk-star--2{right:86px;top:116px;font-size:10px;color:#FC4F00;animation-delay:-.8s}
+.pk-star--3{left:62px;top:160px;font-size:9px;color:#FC4F00;animation-delay:-1.5s}
+.pk-star--4{right:40px;top:268px;font-size:12px;color:#059FF4;animation-delay:-.4s}
+.pk-star--5{left:36px;top:148px;font-size:8px;color:#059FF4;animation-delay:-1.9s}
+@keyframes pkTwinkle{
+  0%,100%{opacity:.25;transform:scale(.7) rotate(0)}
+  50%{opacity:1;transform:scale(1.1) rotate(20deg)}
+}
+
+/* Jackpot boxes get their own twinkle */
+.pk-slot--jackpot::before{
+  content:"✦";
+  position:absolute;top:4px;left:5px;
+  font-size:9px;line-height:1;
+  color:#FC4F00;
+  animation:pkTwinkle 2s ease-in-out infinite;
+}
+
+/* The box under the ball lights up just before it lands */
+.pk-slot.is-target{
+  border-color:rgba(5,159,244,.7);
+  box-shadow:0 0 0 3px rgba(5,159,244,.16), 0 10px 18px -10px rgba(5,159,244,.5);
+  transform:translateY(-2px);
+}
+
+/* Ball trail, peg sparks, landing pop */
+.pk-trail{
+  position:absolute;left:-8px;top:-8px;
+  width:16px;height:16px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(5,159,244,.45) 0%, rgba(5,159,244,0) 70%);
+  pointer-events:none;
+  z-index:4;
+}
+.pk-spark-dot{
+  position:absolute;left:-2.5px;top:-2.5px;
+  width:5px;height:5px;
+  border-radius:50%;
+  background:#059FF4;
+  box-shadow:0 0 6px rgba(5,159,244,.8);
+  pointer-events:none;
+  z-index:4;
+}
+.pk-plus{
+  position:absolute;
+  display:flex;align-items:center;
+  padding:4px 10px;
+  border-radius:999px;
+  background:#fff;
+  border:1px solid rgba(5,159,244,.35);
+  box-shadow:0 10px 20px -10px rgba(5,159,244,.6);
+  font-size:15px;font-weight:800;
+  color:#059FF4;
+  white-space:nowrap;
+  opacity:0;
+  pointer-events:none;
+  z-index:7;
+}
+.pk-plus--jackpot{
+  color:var(--orange);
+  border-color:rgba(252,79,0,.4);
+  box-shadow:0 10px 20px -10px rgba(252,79,0,.6);
+}
+.pk-plus .riyal-icon{width:.85em;height:.9em;margin:0 0 0 2px}
+.pk-burst-coin{
+  position:absolute;left:-9px;top:-9px;
+  width:18px;height:18px;
+  background:url('./assets/coin-mask.svg') center / contain no-repeat;
+  opacity:0;
+  pointer-events:none;
+  z-index:6;
+}
+
+/* A light sheen sweeps across the button while a drop is available */
+.pk-cta{overflow:hidden}
+.pk-cta::after{
+  content:"";
+  position:absolute;top:0;bottom:0;left:-40%;
+  width:35%;
+  background:linear-gradient(100deg, transparent 0%, rgba(255,255,255,.38) 50%, transparent 100%);
+  transform:skewX(-18deg);
+  opacity:0;
+  pointer-events:none;
+}
+.plinko.is-ready .pk-cta:not(:disabled)::after{animation:pkShine 3s ease-in-out infinite}
+@keyframes pkShine{
+  0%{transform:translateX(0) skewX(-18deg);opacity:0}
+  10%{opacity:1}
+  45%{transform:translateX(420%) skewX(-18deg);opacity:1}
+  46%,100%{transform:translateX(420%) skewX(-18deg);opacity:0}
+}
+
+/* Two-dice 3D pair (kept for compatibility, unused now) */
+.dice-pair{display:none}
+.dice2{
+  width:42px;height:42px;
+  position:relative;
+  transform-style:preserve-3d;
+  transform:rotateX(-18deg) rotateY(28deg);
+  transition:transform 1.6s cubic-bezier(.16,.7,.18,1);
+  filter:drop-shadow(0 6px 8px rgba(6,31,111,.18));
+}
+.dice2__face{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 30% 25%, #FFFFFF 0%, #F8F9FC 65%, #E2E6F2 100%);
+  border:1.5px solid rgba(6,31,111,.18);
+  border-radius:9px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.6),
+    inset 0 -2px 3px rgba(6,31,111,.06);
+}
+.dice2__face--front  { transform: translateZ(21px); }
+.dice2__face--back   { transform: rotateY(180deg) translateZ(21px); }
+.dice2__face--right  { transform: rotateY(90deg)  translateZ(21px); }
+.dice2__face--left   { transform: rotateY(-90deg) translateZ(21px); }
+.dice2__face--top    { transform: rotateX(90deg)  translateZ(21px); }
+.dice2__face--bottom { transform: rotateX(-90deg) translateZ(21px); }
+
+.dice2__dot{
+  position:absolute;
+  width:6px;height:6px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #1A3AAE 0%, #061F6F 100%);
+  box-shadow:inset 0 -1px 1px rgba(0,0,0,.2);
+}
+.dice2__dot--c  { top:50%; left:50%; transform:translate(-50%,-50%); }
+.dice2__dot--tl { top:20%; left:20%; }
+.dice2__dot--tr { top:20%; right:20%; }
+.dice2__dot--bl { bottom:20%; left:20%; }
+.dice2__dot--br { bottom:20%; right:20%; }
+.dice2__dot--ml { top:50%; left:20%; transform:translateY(-50%); }
+.dice2__dot--mr { top:50%; right:20%; transform:translateY(-50%); }
+
+/* ============================================================
+   SMALL PRIZE SHEET — partial bottom sheet (Option 1, low amounts)
+   ============================================================ */
+.small-sheet{
+  position:absolute;inset:0;
+  z-index:65;
+  pointer-events:none;
+  display:flex;align-items:flex-end;
+  overflow:hidden;
+}
+
+.small-sheet__backdrop{
+  position:absolute;inset:0;
+  background:rgba(6,31,111,.45);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  opacity:0;
+  transition:opacity .35s ease;
+}
+.small-sheet.is-open{pointer-events:auto}
+.small-sheet.is-open .small-sheet__backdrop{opacity:1}
+
+.small-sheet__panel{
+  position:relative;
+  width:100%;
+  height:62%;
+  background:linear-gradient(180deg,
+    rgba(6,31,111,0) 0%,
+    rgba(6,31,111,.55) 8%,
+    rgba(6,31,111,.85) 22%,
+    rgba(11,42,140,.96) 40%,
+    #061F6F 100%);
+  padding:50px 22px 22px;
+  display:flex;flex-direction:column;align-items:center;
+  text-align:center;
+  overflow:hidden;
+  transform:translateY(100%);
+  transition:transform .55s cubic-bezier(.2,.9,.25,1.05);
+}
+.small-sheet.is-open .small-sheet__panel{transform:translateY(0)}
+
+.small-sheet__handle{display:none}
+.small-sheet__close{
+  position:absolute;top:50px;right:18px;
+  width:30px;height:30px;border-radius:9px;
+  background:rgba(255,255,255,.18);
+  border:1px solid rgba(255,255,255,.22);
+  color:#fff;display:grid;place-items:center;cursor:pointer;
+  z-index:5;
+  transition:background .2s ease;
+}
+.small-sheet__close:hover{background:rgba(255,255,255,.28)}
+
+/* "You won" label + big amount */
+.small-sheet__won{
+  font-size:11px;font-weight:800;letter-spacing:2.4px;
+  color:rgba(255,231,161,.95);
+  text-transform:uppercase;
+  margin-bottom:2px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .25s, transform .4s ease .25s;
+}
+.small-sheet.is-open .small-sheet__won{opacity:1;transform:translateY(0)}
+
+.small-sheet__big-amount{
+  font-size:44px;font-weight:900;letter-spacing:-1px;
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  gap:.08em;
+  width:100%;
+  margin-bottom:8px;
+  text-shadow:0 2px 12px rgba(0,0,0,.25), 0 0 20px rgba(255,193,74,.25);
+  font-variant-numeric:tabular-nums;
+  opacity:0;transform:scale(.7);
+  transition:opacity .45s ease .3s, transform .55s cubic-bezier(.2,.9,.25,1.5) .3s;
+}
+.small-sheet.is-open .small-sheet__big-amount{opacity:1;transform:scale(1)}
+.small-sheet__big-amount .riyal-icon{
+  width:.78em;height:.78em;
+  margin:0;
+  color:#FFE7A1;
+  flex-shrink:0;
+}
+
+.small-sheet__title{
+  margin:0 0 4px;
+  font-size:18px;font-weight:800;
+  color:#fff;text-align:center;
+  letter-spacing:-.2px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .4s, transform .4s ease .4s;
+}
+.small-sheet.is-open .small-sheet__title{opacity:1;transform:translateY(0)}
+
+.small-sheet__sub{
+  margin:0 0 16px;
+  font-size:12.5px;font-weight:500;
+  color:rgba(255,255,255,.65);text-align:center;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .45s, transform .4s ease .45s;
+}
+.small-sheet.is-open .small-sheet__sub{opacity:1;transform:translateY(0)}
+
+/* Step indicator */
+.small-sheet__steps{
+  display:grid;grid-template-columns:repeat(4, 1fr);
+  gap:6px;width:100%;max-width:280px;
+  margin-bottom:16px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .55s, transform .4s ease .55s;
+}
+.small-sheet.is-open .small-sheet__steps{opacity:1;transform:translateY(0)}
+.sm-step{
+  text-align:center;display:flex;flex-direction:column;align-items:center;gap:5px;
+  position:relative;
+}
+.sm-step__num{font-size:9px;font-weight:700;color:rgba(255,255,255,.6)}
+.sm-step__circle{
+  width:30px;height:30px;border-radius:10px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  display:grid;place-items:center;color:rgba(255,255,255,.5);
+  position:relative;
+}
+.sm-step--done .sm-step__circle{
+  background:linear-gradient(135deg, #34C759 0%, #28A745 100%);
+  border-color:transparent;color:#fff;
+  box-shadow:0 6px 14px -4px rgba(52,199,89,.55);
+}
+.sm-step__amount{
+  font-size:11px;font-weight:800;color:#fff;
+  display:inline-flex;align-items:center;
+  font-variant-numeric:tabular-nums;
+}
+.sm-step__amount .riyal-icon{width:.85em;height:.85em;margin-right:.1em}
+.sm-step:not(.sm-step--done) .sm-step__amount{color:rgba(255,255,255,.45)}
+.sm-step::after{
+  content:"";position:absolute;
+  top:24px;left:calc(50% + 15px);
+  width:calc(100% - 30px);height:2px;
+  background-image:linear-gradient(90deg, rgba(255,255,255,.25) 50%, transparent 50%);
+  background-size:5px 2px;
+}
+.sm-step:last-child::after{display:none}
+
+/* Ticket / gift illustration container */
+.small-sheet__icon{
+  position:relative;
+  width:160px;height:120px;
+  display:grid;place-items:center;
+  margin:4px 0 12px;
+  transform:scale(.5);opacity:0;
+  transition:transform .65s cubic-bezier(.2,.9,.25,1.5) .15s, opacity .5s ease .15s;
+}
+.small-sheet.is-open .small-sheet__icon{
+  transform:scale(1);opacity:1;
+  animation:ticketBob 3.5s ease-in-out infinite 1s;
+}
+@keyframes ticketBob{
+  0%,100%{transform:scale(1) rotate(-3deg) translateY(0)}
+  50%{transform:scale(1.02) rotate(3deg) translateY(-4px)}
+}
+.sm-gift{
+  position:relative;width:108px;height:108px;display:block;
+  z-index:2;
+  filter:drop-shadow(0 12px 22px rgba(0,0,0,.35));
+  user-select:none;-webkit-user-drag:none;pointer-events:none;
+}
+
+/* Confetti pieces flying around */
+.sm-confetti{
+  position:absolute;width:8px;height:14px;border-radius:2px;
+  pointer-events:none;opacity:0;
+}
+.sm-confetti--1{top:10%;left:18%;background:#FFC04A;transform:rotate(-25deg)}
+.sm-confetti--2{top:18%;right:12%;background:#FF7A3D;transform:rotate(40deg)}
+.sm-confetti--3{bottom:18%;left:8%;background:#3D8BFF;transform:rotate(15deg);width:6px;height:10px}
+.sm-confetti--4{bottom:14%;right:18%;background:#FFFFFF;transform:rotate(-50deg);width:5px;height:9px}
+.sm-confetti--5{top:50%;left:0;background:#FFE7A1;transform:rotate(60deg);width:7px;height:11px}
+.small-sheet.is-open .sm-confetti{animation:smConfettiFly 2.4s ease-in-out infinite}
+.small-sheet.is-open .sm-confetti--1{animation-delay:.6s}
+.small-sheet.is-open .sm-confetti--2{animation-delay:.95s}
+.small-sheet.is-open .sm-confetti--3{animation-delay:1.3s}
+.small-sheet.is-open .sm-confetti--4{animation-delay:1.65s}
+.small-sheet.is-open .sm-confetti--5{animation-delay:2s}
+@keyframes smConfettiFly{
+  0%,100%{opacity:0;transform:translateY(8px) rotate(0)}
+  50%{opacity:1;transform:translateY(-4px) rotate(180deg)}
+}
+
+.sm-star{
+  position:absolute;color:#FFE7A1;
+  text-shadow:0 0 10px #FFC04A;
+  pointer-events:none;opacity:0;
+}
+.sm-star--1{top:8%;right:24%;font-size:18px}
+.sm-star--2{bottom:24%;left:18%;font-size:14px;color:#FFFFFF}
+.sm-star--3{top:36%;right:8%;font-size:12px}
+.small-sheet.is-open .sm-star{animation:smStarTwinkle 2s ease-in-out infinite}
+.small-sheet.is-open .sm-star--1{animation-delay:.4s}
+.small-sheet.is-open .sm-star--2{animation-delay:1s}
+.small-sheet.is-open .sm-star--3{animation-delay:1.6s}
+@keyframes smStarTwinkle{
+  0%,100%{opacity:0;transform:scale(.5) rotate(0)}
+  50%{opacity:1;transform:scale(1.2) rotate(20deg)}
+}
+
+/* Claim CTA */
+.small-sheet__cta{
+  width:100%;
+  background:linear-gradient(135deg, var(--orange) 0%, #FF7A3D 100%);
+  color:#fff;border:0;border-radius:14px;
+  padding:14px 18px;
+  font-family:inherit;
+  font-size:15px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;
+  box-shadow:
+    0 14px 26px -10px rgba(252,79,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -3px 6px rgba(180,40,0,.3);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:auto;
+  transition:transform .2s ease;
+}
+.small-sheet__cta:hover{transform:translateY(-1px)}
+.small-sheet__cta:active{transform:translateY(0) scale(.98)}
+
+/* ----- Ticket / voucher illustration ----- */
+.small-sheet__icon{
+  position:relative;
+  width:160px;height:120px;
+  display:grid;place-items:center;
+  margin:4px 0 12px;
+  transform:scale(.5);opacity:0;
+  transition:transform .65s cubic-bezier(.2,.9,.25,1.5) .15s, opacity .5s ease .15s;
+}
+.small-sheet.is-open .small-sheet__icon{
+  transform:scale(1);opacity:1;
+  animation:ticketBob 3.5s ease-in-out infinite 1s;
+}
+@keyframes ticketBob{
+  0%,100%{transform:scale(1) rotate(-3deg) translateY(0)}
+  50%{transform:scale(1.02) rotate(3deg) translateY(-4px)}
+}
+
+.sm-gift{
+  position:relative;
+  width:108px;height:108px;
+  display:block;
+  z-index:2;
+  filter:drop-shadow(0 12px 22px rgba(0,0,0,.35));
+  user-select:none;-webkit-user-drag:none;
+  pointer-events:none;
+}
+
+/* Confetti pieces flying around the ticket */
+.sm-confetti{
+  position:absolute;
+  width:8px;height:14px;
+  border-radius:2px;
+  pointer-events:none;
+  opacity:0;
+}
+.sm-confetti--1{top:10%;left:18%;background:#FFC04A;transform:rotate(-25deg)}
+.sm-confetti--2{top:18%;right:12%;background:#FF7A3D;transform:rotate(40deg)}
+.sm-confetti--3{bottom:18%;left:8%;background:#3D8BFF;transform:rotate(15deg);width:6px;height:10px}
+.sm-confetti--4{bottom:14%;right:18%;background:#FFFFFF;transform:rotate(-50deg);width:5px;height:9px}
+.sm-confetti--5{top:50%;left:0;background:#FFE7A1;transform:rotate(60deg);width:7px;height:11px}
+.small-sheet.is-open .sm-confetti{
+  animation:smConfettiFly 2.4s ease-in-out infinite;
+}
+.small-sheet.is-open .sm-confetti--1{animation-delay:.6s}
+.small-sheet.is-open .sm-confetti--2{animation-delay:.95s}
+.small-sheet.is-open .sm-confetti--3{animation-delay:1.3s}
+.small-sheet.is-open .sm-confetti--4{animation-delay:1.65s}
+.small-sheet.is-open .sm-confetti--5{animation-delay:2s}
+@keyframes smConfettiFly{
+  0%,100%{opacity:0;transform:translateY(8px) rotate(0)}
+  50%{opacity:1;transform:translateY(-4px) rotate(180deg)}
+}
+
+/* Sparkle stars */
+.sm-star{
+  position:absolute;
+  color:#FFE7A1;
+  text-shadow:0 0 10px #FFC04A;
+  pointer-events:none;
+  opacity:0;
+}
+.sm-star--1{top:8%;right:24%;font-size:18px}
+.sm-star--2{bottom:24%;left:18%;font-size:14px;color:#FFFFFF}
+.sm-star--3{top:36%;right:8%;font-size:12px}
+.small-sheet.is-open .sm-star{
+  animation:smStarTwinkle 2s ease-in-out infinite;
+}
+.small-sheet.is-open .sm-star--1{animation-delay:.4s}
+.small-sheet.is-open .sm-star--2{animation-delay:1s}
+.small-sheet.is-open .sm-star--3{animation-delay:1.6s}
+@keyframes smStarTwinkle{
+  0%,100%{opacity:0;transform:scale(.5) rotate(0)}
+  50%{opacity:1;transform:scale(1.2) rotate(20deg)}
+}
+
+/* "You won" label + big amount */
+.small-sheet__won{
+  font-size:11px;font-weight:800;letter-spacing:2.4px;
+  color:rgba(255,231,161,.95);
+  text-transform:uppercase;
+  margin-bottom:2px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .25s, transform .4s ease .25s;
+}
+.small-sheet.is-open .small-sheet__won{opacity:1;transform:translateY(0)}
+
+.small-sheet__big-amount{
+  font-size:44px;font-weight:900;letter-spacing:-1px;
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  gap:.08em;
+  width:100%;
+  margin-bottom:8px;
+  text-shadow:0 2px 12px rgba(0,0,0,.25), 0 0 20px rgba(255,193,74,.25);
+  font-variant-numeric:tabular-nums;
+  opacity:0;transform:scale(.7);
+  transition:opacity .45s ease .3s, transform .55s cubic-bezier(.2,.9,.25,1.5) .3s;
+}
+.small-sheet.is-open .small-sheet__big-amount{opacity:1;transform:scale(1)}
+.small-sheet__big-amount .riyal-icon{
+  width:.78em;height:.78em;
+  margin:0;
+  color:#FFE7A1;
+  flex-shrink:0;
+}
+
+/* Headline */
+.small-sheet__title{
+  margin:0 0 4px;
+  font-size:18px;font-weight:800;
+  color:#fff;text-align:center;
+  letter-spacing:-.2px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .4s, transform .4s ease .4s;
+}
+.small-sheet.is-open .small-sheet__title{opacity:1;transform:translateY(0)}
+
+.small-sheet__sub{
+  margin:0 0 16px;
+  font-size:12.5px;font-weight:500;
+  color:rgba(255,255,255,.65);text-align:center;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .45s, transform .4s ease .45s;
+}
+.small-sheet.is-open .small-sheet__sub{opacity:1;transform:translateY(0)}
+
+/* Step indicator (current + next 3 tiers) */
+.small-sheet__steps{
+  display:grid;
+  grid-template-columns:repeat(4, 1fr);
+  gap:6px;
+  width:100%;
+  max-width:280px;
+  margin-bottom:16px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .55s, transform .4s ease .55s;
+}
+.small-sheet.is-open .small-sheet__steps{opacity:1;transform:translateY(0)}
+.sm-step{
+  text-align:center;
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  position:relative;
+}
+.sm-step__num{
+  font-size:11px;font-weight:700;
+  color:rgba(255,255,255,.6);
+}
+.sm-step__circle{
+  width:36px;height:36px;border-radius:12px;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  display:grid;place-items:center;
+  color:rgba(255,255,255,.5);
+  position:relative;
+}
+.sm-step--done .sm-step__circle{
+  background:linear-gradient(135deg, #34C759 0%, #28A745 100%);
+  border-color:transparent;
+  color:#fff;
+  box-shadow:0 6px 14px -4px rgba(52,199,89,.55);
+}
+.sm-step__amount{
+  font-size:11px;font-weight:800;
+  color:#fff;
+  display:inline-flex;align-items:center;
+  font-variant-numeric:tabular-nums;
+}
+.sm-step__amount .riyal-icon{
+  width:.85em;height:.85em;margin-right:.1em;
+}
+.sm-step:not(.sm-step--done) .sm-step__amount{color:rgba(255,255,255,.45)}
+/* Connecting dotted line between steps */
+.sm-step::after{
+  content:"";
+  position:absolute;
+  top:28px;left:calc(50% + 18px);
+  width:calc(100% - 36px);height:2px;
+  background-image:linear-gradient(90deg, rgba(255,255,255,.25) 50%, transparent 50%);
+  background-size:5px 2px;
+}
+.sm-step:last-child::after{display:none}
+
+/* Claim CTA */
+.small-sheet__cta{
+  width:100%;
+  background:linear-gradient(135deg, var(--orange) 0%, #FF7A3D 100%);
+  color:#fff;
+  border:0;border-radius:14px;
+  padding:14px 18px;
+  font-family:inherit;
+  font-size:15px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;
+  box-shadow:
+    0 14px 26px -10px rgba(252,79,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -3px 6px rgba(180,40,0,.3);
+  display:inline-flex;align-items:center;justify-content:center;
+  margin-top:auto;
+  transition:transform .2s ease;
+}
+.small-sheet__cta:hover{transform:translateY(-1px)}
+.small-sheet__cta:active{transform:translateY(0) scale(.98)}
+
+/* ============================================================
+   INFO SHEET — opens when the (i) button is tapped
+   ============================================================ */
+.info-sheet{
+  position:absolute;inset:0;
+  z-index:60;
+  pointer-events:none;
+  display:flex;align-items:flex-end;
+}
+.info-sheet__backdrop{
+  position:absolute;inset:0;
+  background:rgba(6,31,111,.45);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  opacity:0;
+  transition:opacity .35s ease;
+}
+.info-sheet.is-open{pointer-events:auto}
+.info-sheet.is-open .info-sheet__backdrop{opacity:1}
+
+.info-sheet__panel{
+  position:relative;
+  width:100%;
+  background:linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%);
+  border-radius:24px 24px 0 0;
+  padding:14px 22px 24px;
+  box-shadow:0 -20px 40px -10px rgba(6,31,111,.3);
+  transform:translateY(100%);
+  transition:transform .5s cubic-bezier(.2,.9,.25,1.05);
+}
+.info-sheet.is-open .info-sheet__panel{transform:translateY(0)}
+
+.info-sheet__handle{
+  width:40px;height:4px;
+  border-radius:4px;
+  background:rgba(6,31,111,.18);
+  margin:0 auto 12px;
+}
+.info-sheet__close{
+  position:absolute;top:14px;right:16px;
+  width:30px;height:30px;border-radius:9px;
+  background:#F0F2FA;border:0;color:var(--navy);
+  display:grid;place-items:center;cursor:pointer;
+  transition:background .2s ease;
+}
+.info-sheet__close:hover{background:#E4E8F5}
+
+.info-sheet__icon{
+  display:flex;justify-content:center;
+  margin:6px 0 12px;
+}
+
+.info-sheet__title{
+  margin:0;font-size:18px;font-weight:800;
+  color:var(--navy);text-align:center;letter-spacing:-.2px;
+}
+.info-sheet__sub{
+  margin:2px 0 18px;font-size:11.5px;
+  color:var(--orange);text-align:center;
+  font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+}
+
+.info-sheet__steps{
+  list-style:none;padding:0;margin:0 0 18px;
+  display:flex;flex-direction:column;gap:12px;
+}
+.info-sheet__steps li{
+  display:flex;align-items:flex-start;gap:11px;
+  background:#F4F6FB;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:11px 12px;
+}
+.info-step__num{
+  flex:0 0 24px;
+  width:24px;height:24px;border-radius:50%;
+  background:linear-gradient(135deg, var(--orange), #FF7A3D);
+  color:#fff;font-weight:800;font-size:11px;
+  display:grid;place-items:center;
+  box-shadow:0 4px 8px -3px rgba(252,79,0,.6);
+  margin-top:1px;
+}
+.info-sheet__steps b{
+  display:block;font-size:13px;color:var(--navy);
+  font-weight:800;margin-bottom:2px;letter-spacing:-.1px;
+}
+.info-sheet__steps p{
+  margin:0;font-size:11.5px;color:var(--muted);
+  line-height:1.45;
+}
+
+.info-sheet__cta{
+  width:100%;
+  background:linear-gradient(135deg, var(--orange) 0%, #FF7A3D 100%);
+  color:#fff;border:0;border-radius:14px;
+  padding:13px 18px;
+  font-family:inherit;
+  font-size:14px;font-weight:800;letter-spacing:.2px;
+  cursor:pointer;
+  box-shadow:0 12px 22px -10px rgba(252,79,0,.6);
+  transition:transform .2s ease;
+}
+.info-sheet__cta:hover{transform:translateY(-1px)}
+.info-sheet__cta:active{transform:translateY(0) scale(.98)}
+
+/* Empty toast (no-prize sheet) — kept for fallback */
+.empty-toast{
+  position:absolute;
+  left:0;right:0;top:50%;
+  pointer-events:none;
+  display:flex;justify-content:center;
+  z-index:30;
+  opacity:0;
+  transform:translateY(20px);
+  transition:opacity .35s ease, transform .35s cubic-bezier(.2,.9,.25,1.4);
+}
+.empty-toast.is-open{opacity:1;transform:translateY(-50%);pointer-events:auto}
+.empty-toast__panel{
+  background:linear-gradient(180deg, #FFFFFF 0%, #F8FAFF 100%);
+  border:1px solid rgba(6,31,111,.1);
+  border-radius:18px;
+  padding:14px 20px;
+  text-align:center;
+  box-shadow:0 18px 36px -14px rgba(6,31,111,.5);
+  min-width:220px;
+}
+.empty-toast__emoji{font-size:28px;line-height:1;margin-bottom:4px}
+.empty-toast__title{font-size:14px;font-weight:800;color:var(--navy);margin-bottom:2px}
+.empty-toast__sub{font-size:11.5px;color:var(--muted)}
+
+/* Footer hint */
+.game__footer{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  font-size:11px;color:var(--muted);font-weight:500;
+  padding:8px;
+  background:rgba(255,255,255,.5);
+  border-radius:12px;
+  border:1px solid var(--line);
+}
+.game__footer.is-hidden{display:none}
+
+/* ============================================================
+   BIG WIN — full-screen celebration overlay
+   ============================================================ */
+.overlay{
+  position:absolute;inset:0;z-index:50;
+  pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:60px 24px 24px;
+  background:linear-gradient(180deg, rgba(6,31,111,.7) 0%, rgba(4,21,77,.7) 100%);
+  backdrop-filter:blur(2px);
+  -webkit-backdrop-filter:blur(2px);
+  opacity:0;
+  transition:opacity .35s ease;
+  overflow:hidden;
+}
+.overlay.is-open{pointer-events:auto;opacity:1}
+
+/* Softer rays for v1 (more fintech-elegant) */
+.overlay--v1 .overlay__rays{opacity:.4}
+
+/* Sunburst rays radiating from a point above */
+.overlay__rays{
+  position:absolute;inset:0;pointer-events:none;
+  background:repeating-conic-gradient(
+    from 0deg at 50% 28%,
+    rgba(255,255,255,.055) 0deg 6deg,
+    transparent 6deg 12deg
+  );
+  mask-image:radial-gradient(ellipse 100% 80% at 50% 28%, #000 0%, transparent 75%);
+  -webkit-mask-image:radial-gradient(ellipse 100% 80% at 50% 28%, #000 0%, transparent 75%);
+  animation:raysSpin 60s linear infinite;
+  transform-origin:50% 28%;
+}
+@keyframes raysSpin{
+  to{transform:rotate(360deg)}
+}
+/* Vignette over rays */
+.overlay__vignette{
+  position:absolute;inset:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 30%, transparent 0%, rgba(4,21,77,.55) 80%),
+    linear-gradient(180deg, transparent 60%, rgba(4,21,77,.7) 100%);
+}
+
+.overlay__close{
+  position:absolute;top:54px;right:18px;
+  width:32px;height:32px;border-radius:10px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.2);
+  color:#fff;display:grid;place-items:center;cursor:pointer;
+  z-index:10;
+  opacity:0;transform:translateY(-6px);
+  transition:opacity .3s ease .25s, transform .3s ease .25s, background .2s ease;
+}
+.overlay.is-open .overlay__close{opacity:1;transform:translateY(0)}
+.overlay__close:hover{background:rgba(255,255,255,.22)}
+
+.overlay__confetti{
+  position:absolute;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:5;
+}
+
+/* Celebration content */
+.celebration{
+  position:relative;z-index:3;
+  display:flex;flex-direction:column;align-items:center;
+  flex:1;justify-content:center;width:100%;
+  gap:8px;
+}
+
+/* Celebration badge (shared base) */
+.celebration__badge{
+  font-weight:900;letter-spacing:1.8px;
+  color:#fff;
+  padding:10px 30px;border-radius:999px;
+  margin-bottom:6px;
+  text-shadow:0 2px 3px rgba(180,80,0,.45);
+  transform:translateY(-30px) scale(.7);
+  opacity:0;
+  position:relative;
+  z-index:10;
+  transition:transform .55s cubic-bezier(.2,.9,.25,1.4) .15s, opacity .35s ease .15s;
+}
+.overlay.is-revealed .celebration__badge{transform:translateY(0) scale(1);opacity:1}
+
+/* v2 — "BIG WIN!" gold pill */
+.celebration__badge--v2{
+  font-size:18px;
+  background:linear-gradient(180deg, #FFD27A 0%, #FFB347 55%, #E68A00 100%);
+  box-shadow:
+    0 12px 26px -8px rgba(255,180,71,.8),
+    inset 0 1.5px 0 rgba(255,255,255,.7),
+    inset 0 -3px 5px rgba(180,90,0,.35);
+}
+
+/* v1 — "MEGA CASHBACK!" power pill */
+.celebration__badge--v1{
+  font-size:20px;
+  letter-spacing:2.2px;
+  padding:12px 34px;
+  background:linear-gradient(135deg, #FF8A4A 0%, #FC4F00 50%, #B53700 100%);
+  text-shadow:0 2px 4px rgba(120,30,0,.6);
+  box-shadow:
+    0 16px 34px -8px rgba(252,79,0,.85),
+    inset 0 2px 0 rgba(255,255,255,.45),
+    inset 0 -3px 6px rgba(120,30,0,.4);
+}
+.overlay--v1.overlay.is-revealed .celebration__badge--v1{
+  animation:badgePulse 1.6s ease-in-out infinite 1.2s;
+}
+@keyframes badgePulse{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.04)}
+}
+
+/* Variant visibility — toggle via overlay class */
+.overlay--v1 .celebration__badge--v2,
+.overlay--v1 .celebration__trophy--v2,
+.overlay--v1 .celebration__won--v2{display:none}
+.overlay--v2 .celebration__badge--v1,
+.overlay--v2 .celebration__burst,
+.overlay--v2 .celebration__won--v1{display:none}
+
+/* Trophy */
+.celebration__trophy{
+  position:relative;
+  width:140px;height:160px;
+  display:grid;place-items:center;
+  margin:6px 0 12px;
+  transform:scale(.5);
+  opacity:.35;
+  transition:transform .65s cubic-bezier(.2,.9,.25,1.5) .25s, opacity .5s ease .25s;
+}
+.overlay.is-revealed .celebration__trophy{
+  transform:scale(1);opacity:1;
+  animation:trophyBob 3s ease-in-out infinite 1s;
+}
+@keyframes trophyBob{
+  0%,100%{transform:scale(1) translateY(0) rotate(-2deg)}
+  50%{transform:scale(1.02) translateY(-4px) rotate(2deg)}
+}
+.trophy{
+  width:100%;height:100%;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.4));
+  position:relative;z-index:2;
+}
+.trophy__glow{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(circle, rgba(255,193,74,.45) 0%, transparent 65%);
+  filter:blur(8px);
+  opacity:0;
+  transition:opacity .5s ease .4s;
+}
+.overlay.is-revealed .trophy__glow{opacity:1;animation:glowPulse 2.5s ease-in-out infinite 1s}
+@keyframes glowPulse{
+  0%,100%{transform:scale(1);opacity:.85}
+  50%{transform:scale(1.1);opacity:1}
+}
+.trophy__star{
+  position:absolute;font-size:14px;color:#FFD27A;
+  text-shadow:0 0 8px #FFC04A;
+  opacity:0;
+  pointer-events:none;
+}
+.overlay.is-revealed .trophy__star{animation:trophyStar 2.4s ease-in-out infinite}
+.trophy__star--1{top:10%;left:14%;font-size:16px;animation-delay:.4s !important}
+.trophy__star--2{top:18%;right:8%;animation-delay:.9s !important}
+.trophy__star--3{top:42%;right:0%;font-size:12px;animation-delay:1.4s !important}
+.trophy__star--4{bottom:36%;left:0%;animation-delay:1.9s !important;color:#FFE7A1}
+.trophy__star--5{top:30%;left:0%;font-size:10px;animation-delay:2.4s !important}
+@keyframes trophyStar{
+  0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}
+  40%,60%{opacity:1;transform:scale(1.1) rotate(20deg)}
+}
+
+/* "YOU WON" / "Cashback earned" label (shared base) */
+.celebration__won{
+  font-weight:800;
+  margin-top:4px;
+  opacity:0;transform:translateY(8px);
+  transition:opacity .4s ease .5s, transform .4s ease .5s;
+}
+.overlay.is-revealed .celebration__won{opacity:1;transform:translateY(0)}
+.celebration__won--v2{
+  font-size:13px;letter-spacing:3px;
+  background:linear-gradient(180deg, #FFE7A1 0%, #FFB347 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.celebration__won--v1{
+  font-size:13px;letter-spacing:3.5px;font-weight:800;
+  background:linear-gradient(180deg, #FFE7A1 0%, #FFB347 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-transform:uppercase;
+  filter:drop-shadow(0 0 8px rgba(255,193,74,.5));
+}
+
+/* ============================================================
+   v1 — CASHBACK BURST (powerful, dramatic celebration)
+   ============================================================ */
+.celebration__burst{
+  position:absolute;
+  top:18%;
+  left:0;right:0;
+  height:62%;
+  pointer-events:none;
+  z-index:3;
+  opacity:0;
+  transform:scale(.4);
+  transition:opacity .5s ease .2s, transform .7s cubic-bezier(.2,.9,.25,1.6) .2s;
+}
+.overlay.is-revealed .celebration__burst{opacity:1;transform:scale(1)}
+
+/* Pulsing radial glows behind the amount */
+.burst__glow{
+  position:absolute;
+  left:50%;top:50%;
+  border-radius:50%;
+  pointer-events:none;
+  transform:translate(-50%,-50%);
+}
+.burst__glow--1{
+  width:240px;height:240px;
+  background:radial-gradient(circle, rgba(255,193,74,.55) 0%, transparent 60%);
+  filter:blur(18px);
+  animation:burstPulse 2s ease-in-out infinite;
+}
+.burst__glow--2{
+  width:160px;height:160px;
+  background:radial-gradient(circle, rgba(252,79,0,.45) 0%, transparent 65%);
+  filter:blur(14px);
+  animation:burstPulse 2s ease-in-out infinite .5s;
+}
+@keyframes burstPulse{
+  0%,100%{transform:translate(-50%,-50%) scale(.95);opacity:.85}
+  50%{transform:translate(-50%,-50%) scale(1.15);opacity:1}
+}
+
+/* Open gift box — sits behind the MEGA CASHBACK badge */
+.burst__gift{
+  position:absolute;
+  top:-56px;left:50%;
+  transform:translateX(-50%) scale(.55);
+  width:180px;height:195px;
+  z-index:1;
+  opacity:0;
+  transition:transform .65s cubic-bezier(.2,.9,.25,1.5) .25s, opacity .5s ease .25s;
+  filter:drop-shadow(0 14px 18px rgba(0,0,0,.4)) drop-shadow(0 0 22px rgba(255,193,74,.3));
+  pointer-events:none;
+}
+.burst__gift img{width:100%;height:100%;display:block;user-select:none;-webkit-user-drag:none}
+.overlay.is-revealed .burst__gift{
+  opacity:1;
+  transform:translateX(-50%) scale(1);
+  animation:giftFloat 3.5s ease-in-out infinite 1.2s;
+}
+@keyframes giftFloat{
+  0%,100%{transform:translateX(-50%) scale(1)}
+  50%{transform:translateX(-50%) scale(1.025) translateY(-3px)}
+}
+
+/* Rotating golden rays burst */
+.burst__rays{
+  position:absolute;
+  left:50%;top:50%;
+  width:280px;height:280px;
+  transform:translate(-50%,-50%);
+  background:repeating-conic-gradient(
+    from 0deg,
+    rgba(255,193,74,.22) 0deg 8deg,
+    transparent 8deg 18deg
+  );
+  mask-image:radial-gradient(circle, #000 10%, transparent 70%);
+  -webkit-mask-image:radial-gradient(circle, #000 10%, transparent 70%);
+  animation:burstRays 14s linear infinite;
+}
+@keyframes burstRays{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* Floating gold coins — using the pre-masked circular SVG */
+.burst__coin{
+  position:absolute;
+  width:30px;height:30px;
+  background-image:url('./assets/coin-mask.svg');
+  background-size:contain;
+  background-repeat:no-repeat;
+  background-position:center;
+  filter:drop-shadow(0 5px 10px rgba(0,0,0,.35)) drop-shadow(0 0 14px rgba(255,193,74,.7));
+  opacity:0;
+}
+.overlay.is-revealed.overlay--v1 .burst__coin{
+  animation:coinDance 3.4s ease-in-out infinite;
+}
+.burst__coin--1{top:10%;left:12%;animation-delay:0s !important}
+.burst__coin--2{top:5%;left:42%;animation-delay:.35s !important}
+.burst__coin--3{top:8%;right:14%;animation-delay:.7s !important}
+.burst__coin--4{top:42%;left:4%;animation-delay:1.05s !important}
+.burst__coin--5{top:42%;right:6%;animation-delay:1.4s !important}
+.burst__coin--6{bottom:14%;left:18%;animation-delay:1.75s !important}
+.burst__coin--7{bottom:8%;right:22%;animation-delay:2.1s !important}
+.burst__coin--8{bottom:18%;left:48%;animation-delay:2.45s !important}
+@keyframes coinDance{
+  0%{transform:translateY(0) rotate(0deg) scale(.7);opacity:0}
+  20%{opacity:1;transform:translateY(-4px) rotate(80deg) scale(1)}
+  60%{opacity:1;transform:translateY(-14px) rotate(280deg) scale(1.05)}
+  100%{transform:translateY(0) rotate(360deg) scale(.7);opacity:0}
+}
+
+/* Stars / sparkles */
+.burst__star{
+  position:absolute;
+  font-size:18px;color:#FFE7A1;
+  text-shadow:0 0 12px #FFC04A, 0 0 20px rgba(255,193,74,.5);
+  pointer-events:none;
+  opacity:0;
+}
+.overlay.is-revealed.overlay--v1 .burst__star{
+  animation:starTwinkle 1.8s ease-in-out infinite;
+}
+.burst__star--1{top:20%;left:24%;animation-delay:.3s !important}
+.burst__star--2{top:24%;right:22%;animation-delay:.8s !important;color:#FFFFFF;font-size:22px}
+.burst__star--3{top:55%;left:14%;animation-delay:1.3s !important;font-size:14px}
+.burst__star--4{top:60%;right:16%;animation-delay:1.8s !important;color:#FFFFFF}
+.burst__star--5{bottom:18%;left:30%;animation-delay:.5s !important;font-size:14px}
+.burst__star--6{bottom:22%;right:30%;animation-delay:1s !important;font-size:20px;color:#FFFFFF}
+@keyframes starTwinkle{
+  0%,100%{opacity:0;transform:scale(.4) rotate(0deg)}
+  50%{opacity:1;transform:scale(1.25) rotate(25deg)}
+}
+
+/* Wider, bolder digits in v1 reel — keep row height at 62px so the slot math stays correct */
+.overlay--v1 .reel--big .reel__digit{width:48px}
+.overlay--v1 .reel--big .reel__digit-strip{font-size:62px}
+
+/* Pulsing glow under v1 amount */
+.overlay--v1 .reel--big{position:relative;z-index:4}
+.overlay--v1 .reel--big::after{
+  content:"";
+  position:absolute;
+  left:50%;top:50%;
+  width:240px;height:120px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse, rgba(255,193,74,.35) 0%, transparent 70%);
+  filter:blur(16px);
+  pointer-events:none;
+  z-index:-1;
+}
+
+/* Slot reel — celebration size, no dark panel */
+.reel--big{
+  display:inline-flex;align-items:flex-end;gap:0;
+  background:transparent;
+  padding:6px 0 0;
+  border:0;
+  box-shadow:none;
+  overflow:visible;
+  position:relative;
+}
+.reel--big .reel__digits{display:flex;gap:2px;align-items:flex-end}
+.reel--big .reel__digit{
+  width:38px;height:62px;
+  background:transparent;
+  border:0;border-radius:0;
+  position:relative;overflow:hidden;
+  font-variant-numeric:tabular-nums;
+}
+.reel--big .reel__digit-strip{
+  position:absolute;left:0;right:0;top:0;
+  display:flex;flex-direction:column;align-items:center;
+  font-size:54px;font-weight:900;line-height:62px;letter-spacing:-2px;
+  color:#fff;
+  text-shadow:
+    0 4px 14px rgba(0,0,0,.45),
+    0 0 30px rgba(255,193,74,.4);
+  will-change:transform;
+}
+.reel--big .reel__digit-strip span{height:62px;width:100%;text-align:center}
+.reel--big .reel__digit.is-dot{
+  width:14px;background:transparent;border:0;
+  font-size:54px;font-weight:900;color:#fff;
+  display:grid;place-items:end;
+  align-self:flex-end;
+  text-shadow:0 4px 14px rgba(0,0,0,.45);
+  padding-bottom:4px;
+}
+.overlay.is-revealed .reel--big{
+  animation:reelLand .5s cubic-bezier(.2,.9,.25,1.4);
+}
+@keyframes reelLand{
+  0%{transform:scale(1)}
+  50%{transform:scale(1.08)}
+  100%{transform:scale(1)}
+}
+/* Compact reel for 4+ digits so big wins (e.g. 16,801) fit in the phone frame */
+.reel--big.reel--wide .reel__digit{width:30px;height:50px}
+.reel--big.reel--wide .reel__digit-strip{font-size:42px;line-height:50px;letter-spacing:-1.5px}
+.reel--big.reel--wide .reel__digit-strip span{height:50px}
+.overlay--v1 .reel--big.reel--wide .reel__digit{width:36px}
+.overlay--v1 .reel--big.reel--wide .reel__digit-strip{font-size:48px}
+
+/* Currency mark */
+.celebration__currency{
+  font-size:30px;
+  color:rgba(255,231,161,.9);
+  margin-top:-2px;
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;
+  transition:opacity .4s ease .65s;
+}
+.celebration__currency .riyal-icon{margin-right:0}
+.overlay.is-revealed .celebration__currency{opacity:1}
+
+/* Claim CTA */
+.overlay__cta{
+  width:100%;max-width:320px;
+  background:linear-gradient(135deg, var(--orange) 0%, #FF7A3D 100%);
+  color:#fff;
+  border:0;border-radius:18px;
+  padding:16px 20px;
+  font-size:16px;font-weight:800;letter-spacing:.3px;
+  cursor:pointer;
+  box-shadow:
+    0 18px 32px -12px rgba(252,79,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.3),
+    inset 0 -3px 6px rgba(180,40,0,.3);
+  transition:transform .2s ease, opacity .3s ease, filter .3s ease;
+  position:relative;z-index:6;
+  transform:translateY(20px);
+  opacity:.6;
+}
+.overlay.is-open .overlay__cta{transform:translateY(0);opacity:1;transition:transform .4s ease .3s, opacity .4s ease .3s}
+.overlay__cta:disabled{
+  opacity:.55;filter:grayscale(.3);cursor:not-allowed;
+}
+.overlay__cta:not(:disabled):hover{transform:translateY(-2px)}
+.overlay__cta:not(:disabled):active{transform:translateY(0) scale(.98)}
+
+/* ============================================================
+   COMPLETION OVERLAY
+   ============================================================ */
+.complete{
+  position:absolute;inset:0;z-index:60;
+  background:linear-gradient(180deg, rgba(6,31,111,.92), rgba(6,31,111,.98));
+  display:flex;align-items:center;justify-content:center;
+  padding:0 30px;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .4s ease;
+}
+.complete.is-open{opacity:1;pointer-events:auto}
+.complete__panel{
+  text-align:center;color:#fff;
+  position:relative;z-index:3;
+  transform:scale(.85);
+  transition:transform .5s cubic-bezier(.2,.9,.25,1.1) .15s;
+}
+.complete.is-open .complete__panel{transform:scale(1)}
+.complete__crown{
+  width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--orange),#FF8A4A);
+  display:grid;place-items:center;color:#fff;
+  margin:0 auto 16px;
+  box-shadow:0 20px 40px -12px rgba(252,79,0,.6);
+  animation:crownBounce 2.5s ease-in-out infinite;
+}
+@keyframes crownBounce{
+  0%,100%{transform:translateY(0) rotate(-3deg)}
+  50%{transform:translateY(-4px) rotate(3deg)}
+}
+.complete__title{
+  font-size:22px;font-weight:800;letter-spacing:-.3px;margin-bottom:6px;
+}
+.complete__sub{font-size:13px;opacity:.7;margin-bottom:18px;line-height:1.5}
+.complete__stat{
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:18px;
+}
+.complete__stat span{font-size:11px;opacity:.6;display:block;margin-bottom:4px}
+.complete__stat b{font-size:24px;font-weight:800;color:var(--orange);letter-spacing:-.4px}
+.complete__cta{
+  width:100%;
+  background:linear-gradient(135deg, var(--orange) 0%, #FF7A3D 100%);
+  color:#fff;border:0;border-radius:14px;
+  padding:13px;font-size:14px;font-weight:700;cursor:pointer;
+  box-shadow:0 14px 26px -10px rgba(252,79,0,.6);
+}
+.complete__cta:hover{transform:translateY(-1px)}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1080px){
+  .stage{grid-template-columns: 1fr; gap:18px; padding:24px 16px}
+  .stage__intro,.legend{justify-self:center;text-align:center;max-width:380px}
+  .state-tags{justify-content:center}
+}
+@media (max-width: 460px){
+  .phone{
+    width:100%;max-width:380px;height:760px;
+    border-radius:42px;padding:10px;
+  }
+  .phone__screen{border-radius:32px}
+}
